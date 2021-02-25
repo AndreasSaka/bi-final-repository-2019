@@ -1,0 +1,170 @@
+---
+title: "ui"
+output: html_document
+---
+```{r}
+ ui = shinyUI(
+  dashboardPage(
+    dashboardHeader(title = "GIIRIABI Dashboard"),
+    
+    
+    dashboardSidebar(
+      h4("Dashboard pages", align = "center"),
+      sidebarMenu(
+      menuItem("Overview", tabName = "Overview", icon = icon("dashboard", lib = "glyphicon")),
+      menuItem("Input", tabName = "Input", icon = icon("plus", lib = "glyphicon")),
+      menuItem("Output", tabName = "Output", icon = icon("paperclip", lib = "glyphicon")),
+      menuItem("Quality", tabName = "Quality", icon = icon("pencil", lib = "glyphicon")),
+      menuItem("Reputation", tabName = "Reputation", icon = icon("user", lib = "glyphicon"))
+      )),
+  
+    
+    dashboardBody(
+      tabItems(
+        tabItem(tabName = "Overview",
+                h2("Key performance indicator overview"),
+                
+                #### AUSTRIA ####
+                fluidRow(
+                  h3("Austria", align = "center"),
+                  h4("Critical success factor 1: Input in research and innovation", align = "center"),
+                  infoBoxOutput("HumanA", width = 6),
+                  infoBoxOutput("PublicA", width = 6),
+                  infoBoxOutput("EducationA", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 2: Output of the investments in research and innovation", align = "center"),
+                  infoBoxOutput("CitationsA", width = 6),
+                  infoBoxOutput("HighlyCitedA", width = 6),
+                  infoBoxOutput("PatentA", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 3: Quality of the output", align = "center"),
+                  infoBoxOutput("TeachingA", width = 6),
+                  infoBoxOutput("ResearchA", width = 6),
+                  infoBoxOutput("InnovationA", width = 6),
+                  infoBoxOutput("ValueA", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 4: Reputation of the country's research", align = "center"),
+                  infoBoxOutput("InternationalA", width = 6),
+                  infoBoxOutput("IndustryA", width = 6)
+                ),
+                #### AUSTRIA ####
+                
+                #### GERMANY ####
+                fluidRow(
+                  h3("Germany", align = "center"),
+                  h4("Critical success factor 1: Input in research and innovation", align = "center"),
+                  infoBoxOutput("HumanG", width = 6),
+                  infoBoxOutput("PublicG", width = 6),
+                  infoBoxOutput("EducationG", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 2: Output of the investments in research and innovation", align = "center"),
+                  infoBoxOutput("CitationsG", width = 6),
+                  infoBoxOutput("HighlyCitedG", width = 6),
+                  infoBoxOutput("PatentG", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 3: Quality of the output", align = "center"),
+                  infoBoxOutput("TeachingG", width = 6),
+                  infoBoxOutput("ResearchG", width = 6),
+                  infoBoxOutput("InnovationG", width = 6),
+                  infoBoxOutput("ValueG", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 4: Reputation of the country's research", align = "center"),
+                  infoBoxOutput("InternationalG", width = 6),
+                  infoBoxOutput("IndustryG", width = 6)
+                ),
+                #### GERMANY ####
+                
+                ### NETHERLANDS ####
+                fluidRow(
+                  h3("Netherlands", align = "center"),
+                  h4("Critical success factor 1: Input in research and innovation", align = "center"),
+                  infoBoxOutput("HumanN", width = 6),
+                  infoBoxOutput("PublicN", width = 6),
+                  infoBoxOutput("EducationN", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 2: Output of the investments in research and innovation", align = "center"),
+                  infoBoxOutput("CitationsN", width = 6),
+                  infoBoxOutput("HighlyCitedN", width = 6),
+                  infoBoxOutput("PatentN", width = 6)
+                ), 
+                fluidRow(
+                  h4("Critical success factor 3: Quality of the output", align = "center"),
+                  infoBoxOutput("TeachingN", width = 6),
+                  infoBoxOutput("ResearchN", width = 6),
+                  infoBoxOutput("InnovationN", width = 6),
+                  infoBoxOutput("ValueN", width = 6)
+                ),
+                fluidRow(
+                  h4("Critical success factor 4: Reputation of the country's research", align = "center"),
+                  infoBoxOutput("InternationalN", width = 6),
+                  infoBoxOutput("IndustryN", width = 6)
+                )
+        ),
+                #### NETHERLANDS ####
+      
+                
+        tabItem(tabName = "Input",
+              h2("CSF1: Input in research and innovation", align = "center"),
+              fluidRow(
+                box(title = "Dashboard controls: year ranges", status = "primary",
+                    sliderInput(inputId = "yearlow4", label = "Choose lower year range", value = 2005, min = 2000, max = 2020),
+                sliderInput(inputId = "yearhigh4", label = "Choose upper year range", value = 2018, min = 2000, max = 2020)
+                    )
+              ),
+              fluidRow(
+                box(plotOutput("engineers"))
+              ),
+              fluidRow(
+                box(plotOutput("rd")),
+                box(plotOutput("educationexp"))
+              )
+      ),        
+        
+      
+        tabItem(tabName = "Output",
+              h2("CSF2: Output of the investments in research and innovation", align = "center"),
+              fluidRow(
+                box(title = "Dashboard controls", status = "primary")
+              ),
+              fluidRow(
+                box(plotOutput("most_cited")),
+                box(plotOutput("patent_application"))
+              )
+      ),
+        
+      
+        tabItem(tabName = "Quality",
+            h2("CSF3: Quality of the output", align = "center"),
+            fluidRow(
+              box(title = "Dashboard controls: year ranges", status = "primary",
+                sliderInput(inputId = "yearlow1", label = "Choose lower year range", value = 2005, min = 2000, max = 2020),
+                sliderInput(inputId = "yearhigh1", label = "Choose upper year range", value = 2018, min = 2000, max = 2020)
+              )
+            ),
+            fluidRow(
+              box(plotlyOutput("hist")),
+              box(plotlyOutput("value_added"))
+            ),
+            fluidRow(
+              box(plotlyOutput("research"))
+            )
+      ),
+      
+      tabItem(tabName = "Reputation",
+              h2("CSF4: Reputation of the country's research", align = "center")
+      )
+      
+        )
+      
+    )
+  )
+)
+```
+
