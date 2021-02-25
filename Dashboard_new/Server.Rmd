@@ -1,0 +1,1421 @@
+---
+title: "server"
+output: html_document
+---
+
+```{r}
+server = function(input, output) {
+  
+  
+  ###### START AUSTRIA KPI OVERVIEW PAGE ######
+  #Infobox Austria Teaching
+  output$TeachingA = renderInfoBox({
+    
+    TeachingA = university_kpi_tab[c(1:5)]
+    TeachingA = TeachingA[ which(TeachingA$country_name == "Austria"),]
+    LatestyearA = max(TeachingA$year)
+    TeachingA = TeachingA[ which(TeachingA$year == LatestyearA),]
+    TeachingA = na.omit(TeachingA)
+    AverageTeachingA = mean(TeachingA$teaching)
+    
+    if (AverageTeachingA > 49) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageTeachingA > 38.9 & AverageTeachingA <= 49) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageTeachingA > 33.6 & AverageTeachingA <= 38.9) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageTeachingA <= 33.6) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average austrian university teaching score", round(AverageTeachingA, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Austria Innovation
+  output$InnovationA = renderInfoBox({
+    
+    InnovationA = country_kpi_tab[c(1:4)]
+    InnovationA = InnovationA[ which(InnovationA$country_name == "Austria"),]
+    InnovationA = InnovationA[ which(InnovationA$year == 2017),]
+    InnovationAScore = InnovationA[1,4]
+    
+    if (InnovationAScore > 124) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (InnovationAScore > 84 & InnovationAScore <= 124) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (InnovationAScore > 69 & InnovationAScore <= 84) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (InnovationAScore <= 69) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Austrian innovation score (2017)", InnovationAScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Austria Research
+  output$ResearchA = renderInfoBox({
+    
+    ResearchA = university_kpi_tab[c(1:4,6)]
+    ResearchA = ResearchA[ which(ResearchA$country_name == "Austria"),]
+    LatestyearA = max(ResearchA$year)
+    ResearchA = ResearchA[ which(ResearchA$year == LatestyearA),]
+    ResearchA = na.omit(ResearchA)
+    AverageResearchA = mean(ResearchA$research)
+    
+    if (AverageResearchA > 52.6) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageResearchA > 38.9 & AverageResearchA <= 52.6) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageResearchA > 30.7 & AverageResearchA <= 38.9) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageResearchA <= 30.7) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average austrian university research score", round(AverageResearchA, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Austria Value Added
+  output$ValueA = renderInfoBox({
+    
+    ValueA = country_kpi_tab[c(1:3,9)]
+    ValueA = ValueA[ which(ValueA$country_name == "Austria"),]
+    ValueA = ValueA[ which(ValueA$year == 2016),]
+    ValueAScore = ValueA[1,4]
+    
+    if (ValueAScore > 42) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (ValueAScore > 35 & ValueAScore <= 42) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (ValueAScore > 33 & ValueAScore <= 35) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (ValueAScore <= 33) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Austrian value added score (2016)", round(ValueAScore, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Austria International
+  output$InternationalA = renderInfoBox({
+    
+    InternationalA = university_kpi_tab[c(1:4,9)]
+    InternationalA = InternationalA[ which(InternationalA$country_name == "Austria"),]
+    LatestyearA = max(InternationalA$year)
+    InternationalA = InternationalA[ which(InternationalA$year == LatestyearA),]
+    InternationalA = na.omit(InternationalA)
+    AverageInternationalA = mean(InternationalA$international_outlook)
+    
+    if (AverageInternationalA > 84.8) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageInternationalA > 73.4 & AverageInternationalA <= 84.8) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageInternationalA > 61.3 & AverageInternationalA <= 73.4) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageInternationalA <= 61.3) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average austrian university international income score", round(AverageInternationalA, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+   #Infobox Austria Industry
+  output$IndustryA = renderInfoBox({
+    
+    IndustryA = university_kpi_tab[c(1:4,8)]
+    IndustryA = IndustryA[ which(IndustryA$country_name == "Austria"),]
+    LatestyearA = max(IndustryA$year)
+    IndustryA = IndustryA[ which(IndustryA$year == LatestyearA),]
+    IndustryA = na.omit(IndustryA)
+    AverageIndustryA = mean(IndustryA$industry_income)
+    
+    if (AverageIndustryA > 77.8) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageIndustryA > 58.2 & AverageIndustryA <= 77.8) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageIndustryA > 48.5 & AverageIndustryA <= 58.2) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageIndustryA <= 48.5) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average austrian university industry income score", round(AverageIndustryA, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Austria Citations
+  output$CitationsA = renderInfoBox({
+    
+    CitationsA = university_kpi_tab[c(1:4,7)]
+    CitationsA = CitationsA[ which(CitationsA$country_name == "Austria"),]
+    LatestyearA = max(CitationsA$year)
+    CitationsA = CitationsA[ which(CitationsA$year == LatestyearA),]
+    CitationsA = na.omit(CitationsA)
+    AverageCitationsA = mean(CitationsA$citations)
+    
+    if (AverageCitationsA > 89.7) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageCitationsA > 80.6 & AverageCitationsA <= 89.7) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageCitationsA > 72.2 & AverageCitationsA <= 80.6) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageCitationsA <= 72.2) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average austrian university citations score", round(AverageCitationsA, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Austria HighlyCited
+  output$HighlyCitedA = renderInfoBox({
+    
+    HighlyCitedA = country_kpi_tab[c(1:3,8)]
+    HighlyCitedA = HighlyCitedA[ which(HighlyCitedA$country_name == "Austria"),]
+    HighlyCitedA = HighlyCitedA[ which(HighlyCitedA$year == 2014),]
+    HighlyCitedAScore = HighlyCitedA[1,4]
+    
+    if (HighlyCitedAScore > 11.5) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (HighlyCitedAScore > 9.6 & HighlyCitedAScore <= 11.5) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (HighlyCitedAScore > 5.3 & HighlyCitedAScore <= 9.6) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (HighlyCitedAScore <= 5.3) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Austrian highly cited papers score (2014)", HighlyCitedAScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Austria Patent
+  output$PatentA = renderInfoBox({
+    
+    PatentA = country_kpi_tab[c(1:3,5)]
+    PatentA = PatentA[ which(PatentA$country_name == "Austria"),]
+    PatentA = PatentA[ which(PatentA$year == 2014),]
+    PatentAScore = PatentA[1,4]
+    
+    if (PatentAScore > 317) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (PatentAScore > 133 & PatentAScore <= 317) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (PatentAScore > 33 & PatentAScore <= 133) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (PatentAScore <= 33) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Austrian patent score (2014)", PatentAScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Austria Human
+  output$HumanA = renderInfoBox({
+    
+    HumanA = country_kpi_tab[c(1:3,6)]
+    HumanA = HumanA[ which(HumanA$country_name == "Austria"),]
+    HumanA = HumanA[ which(HumanA$year == 2017),]
+    HumanAScore = HumanA[1,4]
+    
+    if (HumanAScore > 8.9) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (HumanAScore > 6.5 & HumanAScore <= 8.9) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (HumanAScore > 5.9 & HumanAScore <= 6.5) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (HumanAScore <= 5.9) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Percentage austrian scientist and engineers as part of the population (2017)", HumanAScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+      #Infobox Austria Public
+  output$PublicA = renderInfoBox({
+    
+    PublicA = country_kpi_tab[c(1:3,6)]
+    PublicA = PublicA[ which(PublicA$country_name == "Austria"),]
+    PublicA = PublicA[ which(PublicA$year == 2016),]
+    PublicAScore = PublicA[1,4]
+    
+    if (PublicAScore > 0.78) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (PublicAScore > 0.5 & PublicAScore <= 0.78) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (PublicAScore > 0.32 & PublicAScore <= 0.5) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (PublicAScore <= 0.32) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Austrian public r&d expenditure score (2016)", PublicAScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Austria Education
+  output$EducationA = renderInfoBox({
+    
+    EducationA = country_kpi_tab[c(1:3,10)]
+    EducationA = EducationA[ which(EducationA$country_name == "Austria"),]
+    EducationA = EducationA[ which(EducationA$year == 2015),]
+    EducationAScore = EducationA[1,4]
+    
+    if (EducationAScore > 5.47) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (EducationAScore > 4.81 & EducationAScore <= 5.47) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (EducationAScore > 4.16 & EducationAScore <= 4.81) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (EducationAScore <= 4.16) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Austrian education expenditure score (2015)", EducationAScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  ###### END AUSTRIA KPI OVERVIEW PAGE ######
+  
+  
+  
+  
+  
+   ###### START GERMANY KPI OVERVIEW PAGE ######
+    #Infobox Germany Teaching
+  output$TeachingG = renderInfoBox({
+    
+    TeachingG = university_kpi_tab[c(1:5)]
+    TeachingG = TeachingG[ which(TeachingG$country_name == "Germany"),]
+    LatestyearG = max(TeachingG$year)
+    TeachingG = TeachingG[ which(TeachingG$year == LatestyearG),]
+    TeachingG = na.omit(TeachingG)
+    AverageTeachingG = mean(TeachingG$teaching)
+    
+    if (AverageTeachingG > 49) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageTeachingG > 38.9 & AverageTeachingG <= 49) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageTeachingG > 33.6 & AverageTeachingG <= 38.9) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageTeachingG <= 33.6) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average german university teaching score", round(AverageTeachingG, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Germany Innovation
+  output$InnovationG = renderInfoBox({
+    
+    InnovationG = country_kpi_tab[c(1:4)]
+    InnovationG = InnovationG[ which(InnovationG$country_name == "Germany"),]
+    InnovationG = InnovationG[ which(InnovationG$year == 2017),]
+    InnovationGScore = InnovationG[1,4]
+    
+    if (InnovationGScore > 124) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (InnovationGScore > 84 & InnovationGScore <= 124) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (InnovationGScore > 69 & InnovationGScore <= 84) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (InnovationGScore <= 69) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("German innovation score (2017)", InnovationGScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Germany Research
+  output$ResearchG = renderInfoBox({
+    
+    ResearchG = university_kpi_tab[c(1:4,6)]
+    ResearchG = ResearchG[ which(ResearchG$country_name == "Germany"),]
+    LatestyearG = max(ResearchG$year)
+    ResearchG = ResearchG[ which(ResearchG$year == LatestyearG),]
+    ResearchG = na.omit(ResearchG)
+    AverageResearchG = mean(ResearchG$research)
+    
+    if (AverageResearchG > 52.6) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageResearchG > 38.9 & AverageResearchG <= 52.6) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageResearchG > 30.7 & AverageResearchG <= 38.9) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageResearchG <= 30.7) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average German university research score", round(AverageResearchG, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Germany Value Added
+  output$ValueG = renderInfoBox({
+    
+    ValueG = country_kpi_tab[c(1:3,9)]
+    ValueG = ValueG[ which(ValueG$country_name == "Germany"),]
+    ValueG = ValueG[ which(ValueG$year == 2016),]
+    ValueGScore = ValueG[1,4]
+    
+    if (ValueGScore > 42) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (ValueGScore > 35 & ValueGScore <= 42) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (ValueGScore > 33 & ValueGScore <= 35) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (ValueGScore <= 33) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("German value added score (2016)", round(ValueGScore,digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Germany International
+  output$InternationalG = renderInfoBox({
+    
+    InternationalG = university_kpi_tab[c(1:4,9)]
+    InternationalG = InternationalG[ which(InternationalG$country_name == "Germany"),]
+    LatestyearG = max(InternationalG$year)
+    InternationalG = InternationalG[ which(InternationalG$year == LatestyearG),]
+    InternationalG = na.omit(InternationalG)
+    AverageInternationalG = mean(InternationalG$international_outlook)
+    
+    if (AverageInternationalG > 84.8) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageInternationalG > 73.4 & AverageInternationalG <= 84.8) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageInternationalG > 61.3 & AverageInternationalG <= 73.4) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageInternationalG <= 61.3) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average German university international income score", round(AverageInternationalG, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+   #Infobox Germany Industry
+  output$IndustryG = renderInfoBox({
+    
+    IndustryG = university_kpi_tab[c(1:4,8)]
+    IndustryG = IndustryG[ which(IndustryG$country_name == "Germany"),]
+    LatestyearG = max(IndustryG$year)
+    IndustryG = IndustryG[ which(IndustryG$year == LatestyearG),]
+    IndustryG = na.omit(IndustryG)
+    AverageIndustryG = mean(IndustryG$industry_income)
+    
+    if (AverageIndustryG > 77.8) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageIndustryG > 58.2 & AverageIndustryG <= 77.8) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageIndustryG > 48.5 & AverageIndustryG <= 58.2) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageIndustryG <= 48.5) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average german university industry income score", round(AverageIndustryG, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Germany Citations
+  output$CitationsG = renderInfoBox({
+    
+    CitationsG  = university_kpi_tab[c(1:4,7)]
+    CitationsG  = CitationsG [ which(CitationsG $country_name == "Germany"),]
+    LatestyearG = max(CitationsG $year)
+    CitationsG  = CitationsG [ which(CitationsG $year == LatestyearG),]
+    CitationsG  = na.omit(CitationsG )
+    AverageCitationsG = mean(CitationsG $citations)
+    
+    if (AverageCitationsG > 89.7) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageCitationsG > 80.6 & AverageCitationsG <= 89.7) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageCitationsG > 72.2 & AverageCitationsG <= 80.6) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageCitationsG <= 72.2) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average German university citations score", round(AverageCitationsG, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Germany HighlyCited
+  output$HighlyCitedG = renderInfoBox({
+    
+    HighlyCitedG = country_kpi_tab[c(1:3,8)]
+    HighlyCitedG = HighlyCitedG[ which(HighlyCitedG$country_name == "Germany"),]
+    HighlyCitedG = HighlyCitedG[ which(HighlyCitedG$year == 2014),]
+    HighlyCitedGScore = HighlyCitedG[1,4]
+    
+    if (HighlyCitedGScore > 11.5) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (HighlyCitedGScore > 9.6 & HighlyCitedGScore <= 11.5) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (HighlyCitedGScore > 5.3 & HighlyCitedGScore <= 9.6) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (HighlyCitedGScore <= 5.3) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("German highly cited papers score (2014)", HighlyCitedGScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Germany Patent
+  output$PatentG = renderInfoBox({
+    
+    PatentG = country_kpi_tab[c(1:3,5)]
+    PatentG = PatentG[ which(PatentG$country_name == "Germany"),]
+    PatentG = PatentG[ which(PatentG$year == 2014),]
+    PatentGScore = PatentG[1,4]
+    
+    if (PatentGScore > 317) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (PatentGScore > 133 & PatentGScore <= 317) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (PatentGScore > 33 & PatentGScore <= 133) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (PatentGScore <= 33) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("German patent score (2014)", PatentGScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Germany Human
+  output$HumanG = renderInfoBox({
+    
+    HumanG = country_kpi_tab[c(1:3,6)]
+    HumanG = HumanG[ which(HumanG$country_name == "Germany"),]
+    HumanG = HumanG[ which(HumanG$year == 2017),]
+    HumanGScore = HumanG[1,4]
+    
+    if (HumanGScore > 8.9) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (HumanGScore > 6.5 & HumanGScore <= 8.9) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (HumanGScore > 5.9 & HumanGScore <= 6.5) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (HumanGScore <= 5.9) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Percentage german scientist and engineers as part of the population (2017)", HumanGScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+      #Infobox Germany Public
+  output$PublicG = renderInfoBox({
+    
+    PublicG = country_kpi_tab[c(1:3,6)]
+    PublicG = PublicG[ which(PublicG$country_name == "Germany"),]
+    PublicG = PublicG[ which(PublicG$year == 2016),]
+    PublicGScore = PublicG[1,4]
+    
+    if (PublicGScore > 0.78) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (PublicGScore > 0.5 & PublicGScore <= 0.78) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (PublicGScore > 0.32 & PublicGScore <= 0.5) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (PublicGScore <= 0.32) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("German public r&d expenditure score (2016)", PublicGScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Germany Education
+  output$EducationG = renderInfoBox({
+    
+    EducationG = country_kpi_tab[c(1:3,10)]
+    EducationG = EducationG[ which(EducationG$country_name == "Germany"),]
+    EducationG = EducationG[ which(EducationG$year == 2014),]
+    EducationGScore = EducationG[1,4]
+    
+    if (EducationGScore > 5.47) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (EducationGScore > 4.81 & EducationGScore <= 5.47) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (EducationGScore > 4.16 & EducationGScore <= 4.81) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (EducationGScore <= 4.16) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("German education expenditure score (2014)", EducationGScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+   ###### END GERMANY KPI OVERVIEW PAGE ######
+  
+  
+  
+  
+  
+  
+  ###### START NETHERLANDS KPI OVERVIEW PAGE ######
+    #Infobox Netherlands Teaching
+  output$TeachingN = renderInfoBox({
+    
+    TeachingN = university_kpi_tab[c(1:5)]
+    TeachingN = TeachingN[ which(TeachingN$country_name == "Netherlands"),]
+    LatestyearN = max(TeachingN$year)
+    TeachingN = TeachingN[ which(TeachingN$year == LatestyearN),]
+    TeachingN = na.omit(TeachingN)
+    AverageTeachingN = mean(TeachingN$teaching)
+    
+    if (AverageTeachingN > 49) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageTeachingN > 38.9 & AverageTeachingN <= 49) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageTeachingN > 33.6 & AverageTeachingN <= 38.9) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageTeachingN <= 33.6) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average netherlands university teaching score", round(AverageTeachingN, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Netherlands Innovation
+  output$InnovationN = renderInfoBox({
+    
+    InnovationN = country_kpi_tab[c(1:4)]
+    InnovationN = InnovationN[ which(InnovationN$country_name == "Netherlands"),]
+    InnovationN = InnovationN[ which(InnovationN$year == 2017),]
+    InnovationNScore = InnovationN[1,4]
+    
+    if (InnovationNScore > 124) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (InnovationNScore > 84 & InnovationNScore <= 124) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (InnovationNScore > 69 & InnovationNScore <= 84) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (InnovationNScore <= 69) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Netherlands innovation score (2017)", InnovationNScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Netherlands Research
+  output$ResearchN = renderInfoBox({
+    
+    ResearchN = university_kpi_tab[c(1:4,6)]
+    ResearchN = ResearchN[ which(ResearchN$country_name == "Netherlands"),]
+    LatestyearN = max(ResearchN$year)
+    ResearchN = ResearchN[ which(ResearchN$year == LatestyearN),]
+    ResearchN = na.omit(ResearchN)
+    AverageResearchN = mean(ResearchN$research)
+    
+    if (AverageResearchN > 52.6) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageResearchN > 38.9 & AverageResearchN <= 52.6) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageResearchN > 30.7 & AverageResearchN <= 38.9) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageResearchN <= 30.7) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average netherlands university research score", round(AverageResearchN, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Netherlands Value Added
+  output$ValueN = renderInfoBox({
+    
+    ValueN = country_kpi_tab[c(1:3,9)]
+    ValueN = ValueN[ which(ValueN$country_name == "Netherlands"),]
+    ValueN = ValueN[ which(ValueN$year == 2016),]
+    ValueNScore = ValueN[1,4]
+    
+    if (ValueNScore > 42) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (ValueNScore > 35 & ValueNScore <= 42) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (ValueNScore > 33 & ValueNScore <= 35) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (ValueNScore <= 33) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Netherlands value added score (2016)", round(ValueNScore, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Netherlands International
+  output$InternationalN = renderInfoBox({
+    
+    InternationalN = university_kpi_tab[c(1:4,9)]
+    InternationalN = InternationalN[ which(InternationalN$country_name == "Netherlands"),]
+    LatestyearN = max(InternationalN$year)
+    InternationalN = InternationalN[ which(InternationalN$year == LatestyearN),]
+    InternationalN = na.omit(InternationalN)
+    AverageInternationalN = mean(InternationalN$international_outlook)
+    
+    if (AverageInternationalN > 84.8) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageInternationalN > 73.4 & AverageInternationalN <= 84.8) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageInternationalN > 61.3 & AverageInternationalN <= 73.4) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageInternationalN <= 61.3) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average netherlands international income score", round(AverageInternationalN, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+   #Infobox Netherlands Industry
+  output$IndustryN = renderInfoBox({
+    
+    IndustryN = university_kpi_tab[c(1:4,8)]
+    IndustryN = IndustryN[ which(IndustryN$country_name == "Netherlands"),]
+    LatestyearN = max(IndustryN$year)
+    IndustryN = IndustryN[ which(IndustryN$year == LatestyearN),]
+    IndustryN = na.omit(IndustryN)
+    AverageIndustryN = mean(IndustryN$industry_income)
+    
+    if (AverageIndustryN > 77.8) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageIndustryN > 58.2 & AverageIndustryN <= 77.8) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageIndustryN > 48.5 & AverageIndustryN <= 58.2) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageIndustryN <= 48.5) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average netherlands industry income score", round(AverageIndustryN, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Netherlands Citations
+  output$CitationsN = renderInfoBox({
+    
+    CitationsN  = university_kpi_tab[c(1:4,7)]
+    CitationsN  = CitationsN [ which(CitationsN $country_name == "Netherlands"),]
+    LatestyearN = max(CitationsN $year)
+    CitationsN  = CitationsN [ which(CitationsN $year == LatestyearN),]
+    CitationsN  = na.omit(CitationsN )
+    AverageCitationsN = mean(CitationsN $citations)
+    
+    if (AverageCitationsN > 89.7) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Country average is within the top 100 universities!"
+    }
+     if (AverageCitationsN > 80.6 & AverageCitationsN <= 89.7) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Country average is within the top 200 universities!"
+     }
+     if (AverageCitationsN > 72.2 & AverageCitationsN <= 80.6) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Country average is within the top 300 universities"
+     }
+     if (AverageCitationsN <= 72.2) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Country average is below the top 300 universities"
+    }
+
+    infoBox("Average netherlands university citations score", round(AverageCitationsN, digits = 1), icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Netherlands HighlyCited
+  output$HighlyCitedN = renderInfoBox({
+    
+    HighlyCitedN = country_kpi_tab[c(1:3,8)]
+    HighlyCitedN = HighlyCitedN[ which(HighlyCitedN$country_name == "Netherlands"),]
+    HighlyCitedN = HighlyCitedN[ which(HighlyCitedN$year == 2014),]
+    HighlyCitedNScore = HighlyCitedN[1,4]
+    
+    if (HighlyCitedNScore > 11.5) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (HighlyCitedNScore > 9.6 & HighlyCitedNScore <= 11.5) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (HighlyCitedNScore > 5.3 & HighlyCitedNScore <= 9.6) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (HighlyCitedNScore <= 5.3) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Netherlands highly cited papers score (2014)", HighlyCitedNScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Netherlands Patent
+  output$PatentN = renderInfoBox({
+    
+    PatentN = country_kpi_tab[c(1:3,5)]
+    PatentN = PatentN[ which(PatentN$country_name == "Netherlands"),]
+    PatentN = PatentN[ which(PatentN$year == 2014),]
+    PatentNScore = PatentN[1,4]
+    
+    if (PatentNScore > 317) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (PatentNScore > 133 & PatentNScore <= 317) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (PatentNScore > 33 & PatentNScore <= 133) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (PatentNScore <= 33) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Netherlands patent score (2014)", PatentNScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+    #Infobox Netherlands Human
+  output$HumanN = renderInfoBox({
+    
+    HumanN = country_kpi_tab[c(1:3,6)]
+    HumanN = HumanN[ which(HumanN$country_name == "Netherlands"),]
+    HumanN = HumanN[ which(HumanN$year == 2017),]
+    HumanNScore = HumanN[1,4]
+    
+    if (HumanNScore > 8.9) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (HumanNScore > 6.5 & HumanNScore <= 8.9) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (HumanNScore > 5.9 & HumanNScore <= 6.5) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (HumanNScore <= 5.9) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Percentage netherlands scientist and engineers as part of the population (2017)", HumanNScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+      #Infobox Netherlands Public
+  output$PublicN = renderInfoBox({
+    
+    PublicN = country_kpi_tab[c(1:3,6)]
+    PublicN = PublicN[ which(PublicN$country_name == "Netherlands"),]
+    PublicN = PublicN[ which(PublicN$year == 2016),]
+    PublicNScore = PublicN[1,4]
+    
+    if (PublicNScore > 0.78) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (PublicNScore > 0.5 & PublicNScore <= 0.78) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (PublicNScore > 0.32 & PublicNScore <= 0.5) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (PublicNScore <= 0.32) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Netherlands public r&d expenditure score (2016)", PublicNScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })
+  
+  #Infobox Netherlands Education
+  output$EducationN = renderInfoBox({
+    
+    EducationN = country_kpi_tab[c(1:3,10)]
+    EducationN = EducationN[ which(EducationN$country_name == "Netherlands"),]
+    EducationN = EducationN[ which(EducationN$year == 2014),]
+    EducationNScore = EducationN[1,4]
+    
+    if (EducationNScore > 5.47) {
+        icon = icon("thumbs-up")
+        col = "green"
+        subtitle = "Platinum tier"
+    }
+     if (EducationNScore > 4.81 & EducationNScore <= 5.47) {
+        icon = icon("thumbs-up")
+        col = "yellow"
+        subtitle = "Gold tier"
+     }
+     if (EducationNScore > 4.16 & EducationNScore <= 4.81) {
+        icon = icon("thumbs-down")
+        col = "red"
+        subtitle = "Silver tier"
+     }
+     if (EducationNScore <= 4.16) {
+        icon = icon("thumbs-down")
+        col = "black"
+        subtitle = "Bronze tier"
+    }
+
+    infoBox("Netherlands education expenditure score (2014)", EducationNScore, icon = icon, width = 3, color = col, subtitle = subtitle)
+  })  
+  ###### END NETHERLANDS KPI OVERVIEW PAGE ######
+  
+  
+  
+  
+  
+  #CSF1   KPI_InnovationScore
+  output$hist = renderPlotly({
+    title = "Innovation score"
+    country_kpi_tab1 = country_kpi_tab[c(1:4)]
+    country_kpi_tab1 = na.omit(country_kpi_tab1)
+    
+    innovationplot = ggplot(country_kpi_tab1, aes(x = country_kpi_tab1$year, y = country_kpi_tab1$innovation_score, colour = country_kpi_tab1$country_name)) + 
+    geom_line() + 
+    ylab(label="Innovation_score") + 
+    xlab("Years") + 
+    xlim(low = input$yearlow1, high = input$yearhigh1) +
+    scale_colour_manual(values=c("red", "royalblue", "darkgreen"))
+
+    innovationplot = ggplotly(innovationplot)
+    innovationplot
+  }
+    
+  )
+  #CSF1   KPI_ValueAdded
+  output$value_added = renderPlotly({
+    title = "Value added"
+    
+    country_kpi_tab6 = country_kpi_tab[c(1:3,9)]
+    country_kpi_tab6 = na.omit(country_kpi_tab6)
+    
+    valueplot = ggplot(country_kpi_tab6, aes(x = country_kpi_tab6$year, y = country_kpi_tab6$value_added, colour = country_kpi_tab6$country_name)) + 
+    geom_line() + 
+    ylab(label="Value added") + 
+    xlab("Years") + 
+    xlim(low = input$yearlow1, high = input$yearhigh1) +
+    scale_colour_manual(values=c("red", "royalblue", "darkgreen"))
+
+    valueplot = ggplotly(valueplot)
+    valueplot
+    
+  }
+  
+  )
+
+  
+  #CSF1 KPI_Research
+  output$research = renderPlotly({
+    title = "Research score"
+    
+   n<-ggplot(data = university_kpi_tab, aes(x = university_kpi_tab$research, fill = country_name)) + 
+     geom_density(col = NA, alpha = 0.35 ) +
+  ggtitle("Year")+
+  xlab("Research")+
+  ylab("Density")
+  #labs(fill = "Country Name")
+  #print(n +  scale_fill_manual(values = c("red", "royalblue", "darkgreen")))
+  n+ geom_vline(aes(xintercept=mean(university_kpi_tab$research)),
+            color="purple", linetype="dashed", size=1)
+ 
+  n = ggplotly(n)
+  }
+  
+  )
+  
+  
+    #CSF3
+    output$most_cited = renderPlot({
+    title = "Most cited papers"
+    
+    country_kpi_tab10 = country_kpi_tab[c(1:3,8)]
+    country_kpi_tab10 = na.omit(country_kpi_tab10)
+    country_kpi_tab11 = subset(country_kpi_tab10, country_kpi_tab10$country_name == "Austria")
+    country_kpi_tab12 = subset(country_kpi_tab10, country_kpi_tab10$country_name == "Germany")
+    country_kpi_tab13 = subset(country_kpi_tab10, country_kpi_tab10$country_name == "Netherlands")
+
+    countries = c("Austria", "Germany", "Netherlands")
+    
+    #value added plot
+    plot(x=NULL, y=NULL, xlim=c(2000,2017), ylim=c(0,20), type = "n", main = title)   #CHOOSE YEAR RANGE? #ylim range?
+    linetype = 1
+    lines(country_kpi_tab11$year, country_kpi_tab11$high_citations, type = "b", col = "red")
+    lines(country_kpi_tab12$year, country_kpi_tab12$high_citations, type = "b", col = "royalblue")
+    lines(country_kpi_tab13$year, country_kpi_tab13$high_citations, type = "b", col = "darkgreen")
+    legend(x = "topleft", countries, col = c("red", "royalblue", "darkgreen"), lty = linetype)
+    
+  }
+  
+  )
+    
+    #CSF3
+    output$patent_application = renderPlot({
+    title = "Patent application"
+    
+    country_kpi_tab14 = country_kpi_tab[c(1:3,5)]
+    country_kpi_tab14 = na.omit(country_kpi_tab14)
+    country_kpi_tab15 = subset(country_kpi_tab14, country_kpi_tab14$country_name == "Austria")
+    country_kpi_tab16 = subset(country_kpi_tab14, country_kpi_tab14$country_name == "Germany")
+    country_kpi_tab17 = subset(country_kpi_tab14, country_kpi_tab14$country_name == "Netherlands")
+
+    countries = c("Austria", "Germany", "Netherlands")
+    
+    #value added plot
+    plot(x=NULL, y=NULL, xlim=c(2000,2017), ylim=c(300,700), type = "n", main = title)   #CHOOSE YEAR RANGE? #ylim range? (select maximum value + 10%?)
+    
+    linetype = 1
+    lines(country_kpi_tab15$year, country_kpi_tab15$patent_application, type = "b", col = "red")
+    lines(country_kpi_tab16$year, country_kpi_tab16$patent_application, type = "b", col = "royalblue")
+    lines(country_kpi_tab17$year, country_kpi_tab17$patent_application, type = "b", col = "darkgreen")
+    legend(x = "topleft", countries, col = c("red", "royalblue", "darkgreen"), lty = linetype)
+    
+  }
+  
+  )
+    
+    #CSF4 KPI_ScientistsAndEngineers
+    output$engineers = renderPlot({
+    title = "Scientists and engineers as % of the population"
+    
+    country_kpi_tab41 = country_kpi_tab[c(1:3,6)]
+    country_kpi_tab41 = na.omit(country_kpi_tab41)
+    country_kpi_tab42 = subset(country_kpi_tab41, country_kpi_tab41$country_name == "Austria")
+    country_kpi_tab43 = subset(country_kpi_tab41, country_kpi_tab41$country_name == "Germany")
+    country_kpi_tab44 = subset(country_kpi_tab41, country_kpi_tab41$country_name == "Netherlands")
+
+    countries = c("Austria", "Germany", "Netherlands")
+    
+    xlimyears4 = c(input$yearlow4, input$yearhigh4)
+    
+    #value added plot
+    plot(x=NULL, y=NULL, xlim=xlimyears4, ylim=c(0,10), type = "n", main = title)   #CHOOSE YEAR RANGE? #ylim range?
+    linetype = 1
+    if (input$countryselection4A == TRUE) {
+    lines(country_kpi_tab42$year, country_kpi_tab42$scientists_and_engineers, type = "b", col = "red")
+    }
+    if (input$countryselection4G == TRUE) {
+    lines(country_kpi_tab43$year, country_kpi_tab43$scientists_and_engineers, type = "b", col = "royalblue")
+    }
+    if (input$countryselection4N == TRUE) {
+    lines(country_kpi_tab44$year, country_kpi_tab44$scientists_and_engineers, type = "b", col = "darkgreen")
+    }
+    legend(x = "topleft", countries, col = c("red", "royalblue", "darkgreen"), lty = linetype)
+
+    }
+
+    )
+    
+    
+    #CSF4 RD_Expenditure
+    output$rd = renderPlot({
+    title = "Research and Development Expenditure"
+    
+    country_kpi_tab45 = country_kpi_tab[c(1:3,7)]
+    country_kpi_tab45 = na.omit(country_kpi_tab45)
+    country_kpi_tab46 = subset(country_kpi_tab45, country_kpi_tab45$country_name == "Austria")
+    country_kpi_tab47 = subset(country_kpi_tab45, country_kpi_tab45$country_name == "Germany")
+    country_kpi_tab48 = subset(country_kpi_tab45, country_kpi_tab45$country_name == "Netherlands")
+
+    countries = c("Austria", "Germany", "Netherlands")
+    
+    xlimyears4 = c(input$yearlow4, input$yearhigh4)
+    
+    #value added plot
+    plot(x=NULL, y=NULL, xlim=xlimyears4, ylim=c(0,2), type = "n", main = title)   #CHOOSE YEAR RANGE? #ylim range?
+    linetype = 1
+    if (input$countryselection4A == TRUE) {
+    lines(country_kpi_tab46$year, country_kpi_tab46$public_rd, type = "b", col = "red")
+    }
+    if (input$countryselection4G == TRUE) {
+    lines(country_kpi_tab47$year, country_kpi_tab47$public_rd, type = "b", col = "royalblue")
+    }
+    if (input$countryselection4N == TRUE) {
+    lines(country_kpi_tab48$year, country_kpi_tab48$public_rd, type = "b", col = "darkgreen")
+    }
+    legend(x = "topleft", countries, col = c("red", "royalblue", "darkgreen"), lty = linetype)
+
+    }
+
+    )
+    
+    #CSF4 Educationexp
+    output$educationexp = renderPlot({
+    title = "Education expenditure"
+    
+    country_kpi_tab51 = country_kpi_tab[c(1:3,10)]
+    country_kpi_tab51 = na.omit(country_kpi_tab51)
+    country_kpi_tab52 = subset(country_kpi_tab51, country_kpi_tab51$country_name == "Austria")
+    country_kpi_tab53 = subset(country_kpi_tab51, country_kpi_tab51$country_name == "Germany")
+    country_kpi_tab54 = subset(country_kpi_tab51, country_kpi_tab51$country_name == "Netherlands")
+
+    countries = c("Austria", "Germany", "Netherlands")
+    
+    xlimyears4 = c(input$yearlow4, input$yearhigh4)
+    
+    #value added plot
+    plot(x=NULL, y=NULL, xlim=xlimyears4, ylim=c(0,10), type = "n", main = title)   #CHOOSE YEAR RANGE? #ylim range?
+    linetype = 1
+    if (input$countryselection4A == TRUE) {
+    lines(country_kpi_tab52$year, country_kpi_tab52$education_expenditure, type = "b", col = "red")
+    }
+    if (input$countryselection4G == TRUE) {
+    lines(country_kpi_tab53$year, country_kpi_tab53$education_expenditure, type = "b", col = "royalblue")
+    }
+    if (input$countryselection4N == TRUE) {
+    lines(country_kpi_tab54$year, country_kpi_tab54$education_expenditure, type = "b", col = "darkgreen")
+    }
+    legend(x = "topleft", countries, col = c("red", "royalblue", "darkgreen"), lty = linetype)
+
+    }
+
+    )
+}
+    
+shinyApp(ui = ui, server = server)
+```
+
