@@ -1,0 +1,222 @@
+---
+title: "Descriptive Statistics"
+output: html_document
+---
+country<-tbl(connection, 'country_kpi')
+university<-tbl(connection, 'university_kpi')
+
+country%>% explain()
+university%>% explain()
+```
+
+```{r}
+country
+university
+
+```
+
+```{r}
+countries <- tbl(connection, 'country_kpi') %>% select(1:10) %>% collect()
+universities<-tbl(connection, 'university_kpi') %>% select(1:9) %>% collect()
+
+
+```
+
+#how to select countries 
+
+```{r}
+
+austria <- tbl(connection, 'country_kpi') %>% select(1:10) %>% filter(country_name=="Austria") %>% collect()
+netherlands <- tbl(connection, 'country_kpi') %>% select(1:10) %>% filter(country_name=="Netherlands") %>% collect()
+germany <- tbl(connection, 'country_kpi') %>% select(1:10) %>% filter(country_name=="Germany") %>% collect()
+
+```
+
+#how to select countries+universities
+
+```{r}
+a_uni <- tbl(connection, 'university_kpi') %>% select(1:9) %>% filter(country_name=="Austria") %>% collect()
+n_uni <- tbl(connection, 'university_kpi') %>% select(1:9) %>% filter(country_name=="Netherlands") %>% collect()
+g_uni <- tbl(connection, 'university_kpi') %>% select(1:9) %>% filter(country_name=="Germany") %>% collect()
+
+```
+
+
+# transforming the countries dataset
+
+```{r}
+countries$countryfact_id<-NULL
+countries<-na.omit(countries)
+countries$country_name<-factor(countries$country_name)
+
+austria$countryfact_id<-NULL
+austria$na.omit(countries)
+austria$country_name<-factor(austria$country_name)
+
+netherlands$countryfact_id<-NULL
+netherlands$na.omit(countries)
+netherlands$country_name<-factor(netherlands$country_name)
+
+germany$countryfact_id<-NULL
+germany$na.omit(countries)
+germany$country_name<-factor(germany$country_name)
+
+# transforming the universities dataset
+
+universities$unifact_id <- NULL
+universities<- na.omit(universities)
+universities$country_name<-factor(universities$country_name)
+
+a_uni$unifact_id <- NULL
+a_uni<- na.omit(universities)
+a_uni$country_name<-factor(a_uni$country_name)
+
+n_uni$unifact_id <- NULL
+n_uni<- na.omit(universities)
+n_uni$country_name<-factor(n_uni$country_name)
+
+g_uni$unifact_id <- NULL
+g_uni<- na.omit(universities)
+g_uni$country_name<-factor(g_uni$country_name)
+
+```
+
+#checking for the density amongst for the research variable
+```{r}
+ggplot(data = universities, aes(x = universities$research, fill = country_name)) + geom_density(col = NA, alpha = 0.35 ) +
+  ggtitle("Year")+
+  xlab("Research")+
+  ylab("Density")
+labs(fill = "Country Name")
+
+```
+
+#checking the normality in the countries dataset
+```{r}
+
+ggpairs(data=countries, columns=3:10, title="Countries data")
+hist(countries$innovation_score)
+hist(countries$patent_application)
+hist(countries$scientists_and_engineers)
+hist(countries$public_rd)
+hist(countries$high_citations)
+hist(countries$value_added)
+hist(countries$education_expenditure)
+
+```
+#checking the normality in the universities dataset
+```{r}
+
+library(GGally)
+ggpairs(data=universities, columns=4:8, title="University data")
+hist(universities$teaching)
+hist(universities$research)
+hist(universities$citations)
+hist(universities$industry_income)
+hist(universities$international_outlook)
+
+```
+# defining a function modeval(X) to calculate the mode of X:
+```{r}
+library(moments);
+modeval = function(X){
+  return(as.numeric(names(sort(-table(X))[1])));
+}
+```
+#descriptive stats
+```{r}
+str(countries)
+str(universities)
+
+summary(austria[,4:10])
+summary(netherlands[,4:10])
+summary(germany[,4:10])
+
+summary(a_uni[,4:8])
+summary(n_uni[,4:8])
+summary(g_uni[,4:8])
+
+
+lapply(austria[,4:10], sd)
+lapply(nederlands[,4:10], sd)
+lapply(germany[,4:10], sd)
+
+lapply(austria[,4:10], var)
+lapply(nederlands[,4:10], var)
+lapply(germany[,4:10], var)
+
+lapply(a_uni[,4:10], sd)
+lapply(n_uni[,4:10], sd)
+lapply(g_uni[,4:10], sd)
+
+lapply(a_uni[,4:10], var)
+lapply(n_uni[,4:10], var)
+lapply(g_uni[,4:10], var)
+
+```
+
+
+#Multiple Regression Analysis regression for countries dataset
+```{r}
+
+trainSize <- round(nrow(countries) * 0.75)
+testSize <- nrow(countries) - trainSize
+
+set.seed(123)
+training_indices <- sample(seq_len(nrow(countries)),
+                           size=trainSize)
+trainSet <- countries[training_indices, ]
+testSet <- countries[-training_indices, ]
+model1 <- lm(formula=trainSet$innovation_score ~ . , data=trainSet)
+model2 <- lm(formula=testSet$innovation_score ~ . , data=testSet)
+
+#residual check
+
+ggplot(data=trainSet, aes(model1$residuals)) + 
+  geom_histogram(binwidth = 1, color = "black", fill = "purple4") +
+  theme(panel.background = element_rect(fill = "white"),
+        axis.line.x=element_line(),
+        axis.line.y=element_line()) +
+  ggtitle("Histogram for Model Residuals") 
+
+ggplot(data=testSet, aes(model2$residuals)) + 
+  geom_histogram(binwidth = 1, color = "black", fill = "purple4") +
+  theme(panel.background = element_rect(fill = "white"),
+        axis.line.x=element_line(),
+        axis.line.y=element_line()) +
+  ggtitle("Histogram for Model Residuals") 
+
+```
+
+#Multiple Regression Analysis for universities dataset    
+
+```{r}
+set.seed(123)
+trainSize2 <- round(nrow(uni1) * 0.75)
+testSize2 <- nrow(uni1) - trainSize2
+training_indices2 <- sample(seq_len(nrow(uni1)),
+                            size=trainSize2)
+trainSet2 <- uni1[training_indices2, ]
+testSet2 <- uni1[-training_indices2, ]
+
+model3 <- lm(formula=trainSet2$international_outlook ~ . , data=trainSet2)
+
+model4 <- lm(formula=testSet2$international_outlook ~ . , data=testSet2)
+
+#residual check
+
+ggplot(data=trainSet2, aes(model3$residuals)) + 
+  geom_histogram(binwidth = 1, color = "black", fill = "purple4") +
+  theme(panel.background = element_rect(fill = "white"),
+        axis.line.x=element_line(),
+        axis.line.y=element_line()) +
+  ggtitle("Histogram for Model Residuals") 
+
+ggplot(data=testSet2, aes(model4$residuals)) + 
+  geom_histogram(binwidth = 1, color = "black", fill = "purple4") +
+  theme(panel.background = element_rect(fill = "white"),
+        axis.line.x=element_line(),
+        axis.line.y=element_line()) +
+  ggtitle("Histogram for Model Residuals") 
+
+```
