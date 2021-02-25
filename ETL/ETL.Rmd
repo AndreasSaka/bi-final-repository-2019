@@ -1,0 +1,146 @@
+---
+title: "ETL"
+output: html_document
+---
+```{r}
+#all our used libraries, make sure to download them!
+```{r}
+library(RPostgreSQL)
+library(tidyverse)
+library(dplyr)
+library(DBI)
+library(readr) #to read the csv file with the data, i.e. read_csv
+library(RMySQL) #to put dataframe into database table, i.e. dbWriteTable
+```
+
+#Some database connection stuff
+#YOU MUST CHANGE THIS --> dbname, host, user, password, maybe other things?
+```{r}
+db_user <- "postgres"
+driver <- dbDriver("PostgreSQL")
+connection <- dbConnect(driver, dbname="mypgdb", host="localhost", port=5432, user="postgres", password="password")
+
+```
+
+#Creating the tables, just pretend that there is a star schema ;)
+```{sql connection=connection, max.print = 0}
+DROP TABLE IF EXISTS country_kpi;
+DROP TABLE IF EXISTS university_kpi;
+
+CREATE TABLE country_kpi(
+  countryfact_id integer,
+  country_name varchar(200),
+  year integer,
+  innovation_score decimal(18,4),
+  patent_application decimal(18,4),
+  scientists_and_engineers decimal(18,4),
+  public_rd decimal(18,4),
+  high_citations decimal(18,4),
+  value_added decimal(18,4),
+  education_expenditure decimal(18,4)
+);
+
+CREATE TABLE university_kpi(
+  unifact_id integer,
+  uni_name varchar(200),
+  country_name varchar(200),
+  year integer,
+  teaching decimal(18,4),
+  research decimal(18,4),
+  citations decimal(18,4),
+  industry_income decimal(18,4),
+  international_outlook decimal(18,4)
+);
+
+```
+#Saving the csv files with all our data as r variables
+#YOU MUST CHANGE THIS --> path to the files
+```{r, message=FALSE, warning=FALSE}
+country_kpi_tab <- readr::read_csv('C:/Users/Desktop/Business intelligence/Data/country_kpi.csv')
+university_kpi_tab <- readr::read_csv('C:/Users//Desktop/Business intelligence/Data/university_kpi.csv')
+```
+
+#Populating the database with those r variables
+```{r}
+dbWriteTable(connection, "country_kpi", country_kpi_tab, append=TRUE, row.names = FALSE)
+dbWriteTable(connection, "university_kpi", university_kpi_tab, append=TRUE, row.names = FALSE)
+```
+
+#Check out the tables we've just populated!
+
+```{r}
+library(RPostgreSQL)
+library(tidyverse)
+library(dplyr)
+library(DBI)
+library(readr) #to read the csv file with the data, i.e. read_csv
+library(RMySQL) #to put dataframe into database table, i.e. dbWriteTable
+
+#DASHBOARD 
+library(devtools)
+library(shiny)
+library(lattice)
+library(rsconnect)
+library(shinydashboard)
+library(ggplot2)
+library(GGally)
+
+#!!! USE THIS TO INSTALL PLOTLY !!!
+#devtools::install_github("ropensci/plotly")
+library(plotly)
+```
+
+#Some database connection stuff
+#YOU MUST CHANGE THIS --> dbname, host, user, password, maybe other things?
+```{r}
+db_user <- "postgres"
+driver <- dbDriver("PostgreSQL")
+connection <- dbConnect(driver, dbname="mypgdb", host="localhost", port=5432, user="postgres", password="password")
+
+```
+
+#Creating the tables, just pretend that there is a star schema ;)
+```{sql connection=connection, max.print = 0}
+DROP TABLE IF EXISTS country_kpi;
+DROP TABLE IF EXISTS university_kpi;
+
+CREATE TABLE country_kpi(
+  countryfact_id integer,
+  country_name varchar(200),
+  year integer,
+  innovation_score decimal(18,4),
+  patent_application decimal(18,4),
+  scientists_and_engineers decimal(18,4),
+  public_rd decimal(18,4),
+  high_citations decimal(18,4),
+  value_added decimal(18,4),
+  education_expenditure decimal(18,4)
+);
+
+CREATE TABLE university_kpi(
+  unifact_id integer,
+  uni_name varchar(200),
+  country_name varchar(200),
+  year integer,
+  teaching decimal(18,4),
+  research decimal(18,4),
+  citations decimal(18,4),
+  industry_income decimal(18,4),
+  international_outlook decimal(18,4)
+);
+
+```
+#Saving the csv files with all our data as r variables
+#YOU MUST CHANGE THIS --> path to the files
+```{r, message=FALSE, warning=FALSE}
+country_kpi_tab <- readr::read_csv('C:/Users/Desktop/Business intelligence/Data/country_kpi.csv')
+university_kpi_tab <- readr::read_csv('C:/Users/Desktop/Business intelligence/Data/university_kpi.csv')
+```
+
+#Populating the database with those r variables
+```{r}
+dbWriteTable(connection, "country_kpi", country_kpi_tab, append=TRUE, row.names = FALSE)
+dbWriteTable(connection, "university_kpi", university_kpi_tab, append=TRUE, row.names = FALSE)
+```
+```
+
