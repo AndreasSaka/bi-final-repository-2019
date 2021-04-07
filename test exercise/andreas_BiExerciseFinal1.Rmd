@@ -1,0 +1,69 @@
+---
+title: "BI Exercise: Install R Environment"
+author: Andreas Sakapetis
+output:
+  html_notebook: default
+  pdf_document: default
+
+---
+
+
+```{r}
+> library("RPostgreSQL")
+Loading required package: DBI
+
+> library(tidyverse)
+-- Attaching packages --------------------------------------- tidyverse 1.2.1 --
+<U+221A> ggplot2 2.2.1     <U+221A> purrr   0.2.4
+<U+221A> tibble  1.4.2     <U+221A> dplyr   0.7.4
+<U+221A> tidyr   0.8.0     <U+221A> stringr 1.3.0
+<U+221A> readr   1.1.1     <U+221A> forcats 0.3.0
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+> library(datasets)
+> db_user <- "postgres"
+> db_password <- rstudioapi::askForPassword("Database password that you have remembered, pleaaase:")
+> driver <- dbDriver("PostgreSQL")
+> connection <- dbConnect(driver, dbname="mypgdb", host="localhost", port=5432, user=db_user, password=db_password)
+> 
+> query <- 'SELECT * FROM test.Bi_test' 
+> 
+> get_results <- dbGetQuery(connection, query)
+
+> copy_to(connection, mpg)
+> custom_mpg <- filter(tbl(connection, "mpg"), model=="a4")
+> custom_mpg
+# Source:   lazy query [?? x 11]
+# Database: postgres 10.0.3
+#   [postgres@localhost:5432/mypgdb]
+  manufacturer model displ  year   cyl trans   drv     cty
+  <chr>        <chr> <dbl> <int> <int> <chr>   <chr> <int>
+1 audi         a4     1.80  1999     4 auto(l~ f        18
+2 audi         a4     1.80  1999     4 manual~ f        21
+3 audi         a4     2.00  2008     4 manual~ f        20
+4 audi         a4     2.00  2008     4 auto(a~ f        21
+5 audi         a4     2.80  1999     6 auto(l~ f        16
+6 audi         a4     2.80  1999     6 manual~ f        18
+7 audi         a4     3.10  2008     6 auto(a~ f        18
+# ... with 3 more variables: hwy <int>, fl <chr>,
+#   class <chr>
+> sql_query <- dbplyr::sql("SELECT license, get_started.wheel.id FROM get_started.car INNER JOIN get_started.wheel ON get_started.car.id = get_started.wheel.car_id")
+> query <- tbl(connection, sql_query)
+> result_frame <- query %>% group_by(license)  %>% summarise(wheels = n())
+> result_frame
+# Source:   lazy query [?? x 2]
+# Database: postgres 10.0.3
+#   [postgres@localhost:5432/mypgdb]
+  license  wheels
+  <chr>     <dbl>
+1 W0-N-KA      4.
+2 UU-UU-UU     4.
+3 TROL-01      5.
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
